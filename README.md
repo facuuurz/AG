@@ -1,33 +1,30 @@
-# TP Algoritmos Genéticos — Inteligencia Artificial
+# TP Algoritmos Genéticos - Inteligencia Artificial
 
-**Cátedra:** Inteligencia Artificial — Lic. en Sistemas de Información (FCyT, UADER, Oro Verde) — 2026
-**Integrantes:** Facundo Tomas Hernandez · Facundo Thomas Ramirez
+Cátedra Inteligencia Artificial, Lic. en Sistemas de Información (FCyT, UADER, Oro Verde), 2026.
 
-Resolución de la Parte 1 del TP (Algoritmos Genéticos) en el notebook
-[`TP_AG_Hernandez_Ramirez.ipynb`](TP_AG_Hernandez_Ramirez.ipynb), con el código separado
-por etapa según el *proceso usual AG*: población → aptitud → selección → cruzamiento → mutación.
+Integrantes: Facundo Tomas Hernandez y Facundo Thomas Ramirez
 
-## Contenido
+Resolución de la Parte 1 del TP (Algoritmos Genéticos). Todo está en el notebook
+`TP_AG_Hernandez_Ramirez.ipynb`, separado por actividad y, dentro de cada una, por etapa
+del AG (población, aptitud, selección, cruzamiento y mutación).
 
-| Actividad | Problema | Codificación | Selección |
-|---|---|---|---|
-| 1 | Búsqueda de la cadena `"Los algoritmos genéticos sirven para optimizar"` y elección automática del mejor tamaño de población de `PS = [100, 1000, 50, 200, 300, 50, 500]` | Entera | Torneo + elitismo |
-| 2.a | Mínimo de `f(x,y) = (x-1)² + (x-y)⁴` | Binaria | Rueda de ruleta |
-| 2.b | Máximo de `f(x,y) = 2 + sqrt(9 - x² - y²)` (parte real) | Real | Rango lineal + penalización |
-| 2.c | Máximo de `f(x,y,z) = z - x² - 15y²` con `-2 < x,y,z < 11` | Real | Torneo + elitismo |
-| 3 | Selección de variables en el dataset *Wine* (etapas Seleccionar / Cruzar / Mutar / Reemplazar) | Binaria | Torneo |
+- Actividad 1: búsqueda de la cadena "Los algoritmos genéticos sirven para optimizar" y elección
+  automática del mejor tamaño de población de PS = [100, 1000, 50, 200, 300, 50, 500].
+- Actividad 2.a: mínimo de f(x,y) = (x-1)^2 + (x-y)^4 con selección por ruleta.
+- Actividad 2.b: máximo de f(x,y) = 2 + sqrt(9 - x^2 - y^2) con selección por rango.
+- Actividad 2.c: máximo de f(x,y,z) = z - x^2 - 15y^2 con -2 < x,y,z < 11, con selección por torneo.
+- Actividad 3: selección de variables en el dataset Wine.
 
 ## Archivos
 
-- `TP_AG_Hernandez_Ramirez.ipynb` — **el entregable**: notebook con código Python, explicaciones, salidas y gráficos.
-- `TP_AG_Hernandez_Ramirez.py` — el mismo código Python exportado como script plano (sin las explicaciones ni los gráficos embebidos), por si se quiere leer o correr fuera de Jupyter.
+- `TP_AG_Hernandez_Ramirez.ipynb`: el entregable, con el código, las explicaciones, las salidas y los gráficos.
+- `TP_AG_Hernandez_Ramirez.py`: el mismo código exportado como script, para leerlo o correrlo fuera de Jupyter.
 
-## Ejecución
+## Cómo ejecutarlo
 
-```bash
+```
 pip install numpy pandas matplotlib scikit-learn jupyter
 jupyter notebook TP_AG_Hernandez_Ramirez.ipynb
 ```
 
-El notebook ya incluye todas las salidas y gráficos. Re-ejecutarlo completo tarda unos 2 minutos
-(Python 3.10, NumPy 2.x, scikit-learn 1.7).
+El notebook ya tiene las salidas guardadas. Correrlo entero tarda alrededor de un minuto.

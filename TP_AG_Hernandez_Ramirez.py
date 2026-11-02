@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Trabajo Práctico – Parte 1: Algoritmos Genéticos
+# # Trabajo Práctico - Parte 1: Algoritmos Genéticos
 # 
-# **Cátedra:** Inteligencia Artificial – Lic. en Sistemas de Información (FCyT – UADER, Oro Verde)
-# **Integrantes:** Facundo Tomas Hernandez · Facundo Thomas Ramirez
+# **Cátedra:** Inteligencia Artificial - Lic. en Sistemas de Información (FCyT - UADER, Oro Verde)
+# **Integrantes:** Facundo Tomas Hernandez y Facundo Thomas Ramirez
 # **Año:** 2026
 # 
 # Este notebook resuelve las tres actividades del TP usando **Algoritmos Genéticos (AG)** programados desde cero en Python (NumPy), con el código separado por etapa según el **PROCESO USUAL AG** visto en teoría:
 # 
-# 1. **Población** – conjunto inicial de individuos (soluciones candidatas).
-# 2. **Función de aptitud (fitness)** – puntaje que mide qué tan buena es cada solución.
-# 3. **Selección** – elegir a los más aptos para que pasen sus genes.
-# 4. **Cruzamiento** – combinar pares de padres en un punto de cruce.
-# 5. **Mutación** – alterar al azar algunos genes de los hijos.
+# 1. Población: conjunto inicial de individuos (soluciones candidatas).
+# 2. Función de aptitud (fitness): puntaje que mide qué tan buena es cada solución.
+# 3. Selección: elegir a los más aptos para que pasen sus genes.
+# 4. Cruzamiento: combinar pares de padres en un punto de cruce.
+# 5. Mutación: alterar al azar algunos genes de los hijos.
 # 
-# Además, en cada actividad se usa un **método de selección distinto** (torneo, ruleta, rango) para cubrir los que menciona la bibliografía de la cátedra.
+# Además, se usan distintos métodos de selección de los que menciona la bibliografía de la cátedra (torneo, ruleta y rango).
 # 
 # | Actividad | Problema | Codificación | Selección |
 # |---|---|---|---|
 # | 1 | Búsqueda de una cadena de texto | Entera (índice de carácter) | Torneo + elitismo |
-# | 2.a | Minimizar $f(x,y)=(x-1)^2+(x-y)^4$ | **Binaria** (como en la diapositiva "Rueda") | **Rueda de ruleta** |
+# | 2.a | Minimizar $f(x,y)=(x-1)^2+(x-y)^4$ | Binaria (como en la diapositiva "Rueda") | Rueda de ruleta |
 # | 2.b | Maximizar $f(x,y)=2+\sqrt{9-x^2-y^2}$ | Real | Rango lineal + penalización |
 # | 2.c | Maximizar $f(x,y,z)=z-x^2-15y^2$, $-2<x,y,z<11$ | Real | Torneo + elitismo |
 # | 3 | Selección de variables en el dataset *Wine* | Binaria (máscara de features) | Torneo (como en el artículo de Warnes) |
@@ -47,7 +47,7 @@ print("NumPy", np.__version__, "| pandas", pd.__version__)
 
 
 # ---
-# # ACTIVIDAD 1 – Búsqueda de la cadena de texto
+# # ACTIVIDAD 1 - Búsqueda de la cadena de texto
 # 
 # **Objetivo:** encontrar con un AG la cadena
 # `TARGET = "Los algoritmos genéticos sirven para optimizar"`
@@ -55,18 +55,18 @@ print("NumPy", np.__version__, "| pandas", pd.__version__)
 # `PS = [100, 1000, 50, 200, 300, 50, 500]` se ajusta mejor al problema.
 # 
 # ### Modelado del problema
-# * **Individuo (cromosoma):** una cadena de la misma longitud que el TARGET (46 caracteres). Cada **gen** es un carácter, representado internamente como un entero = índice dentro de un alfabeto. Así toda la población es una matriz NumPy de enteros de forma `(PS, 46)` y las operaciones se vectorizan.
-# * **Función de aptitud:** cantidad de posiciones en las que el individuo coincide con el TARGET (0 … 46). **Se maximiza**; la solución es un individuo con aptitud 46.
-# * **Selección:** torneo de tamaño 3 (se toman 3 individuos al azar y gana el de mayor aptitud). Elegimos torneo porque no depende de la escala del fitness y es robusto cuando muchos individuos tienen aptitud parecida.
-# * **Cruzamiento:** de un punto (se elige al azar un punto de corte y se intercambian las colas), con probabilidad `PC`.
-# * **Mutación:** cada gen del hijo se reemplaza por un carácter aleatorio con probabilidad `PM = 1/L`.
-# * **Elitismo:** el mejor individuo de la generación anterior sobrevive siempre (para no perder la mejor solución por azar).
+# * Individuo (cromosoma): una cadena de la misma longitud que el TARGET (46 caracteres). Cada **gen** es un carácter, representado internamente como un entero = índice dentro de un alfabeto. Así toda la población es una matriz NumPy de enteros de forma `(PS, 46)` y las operaciones se vectorizan.
+# * Función de aptitud: cantidad de posiciones en las que el individuo coincide con el TARGET (0 a 46). **Se maximiza**; la solución es un individuo con aptitud 46.
+# * Selección: torneo de tamaño 3 (se toman 3 individuos al azar y gana el de mayor aptitud). Elegimos torneo porque no depende de la escala del fitness y es robusto cuando muchos individuos tienen aptitud parecida.
+# * Cruzamiento: de un punto (se elige al azar un punto de corte y se intercambian las colas), con probabilidad `PC`.
+# * Mutación: cada gen del hijo se reemplaza por un carácter aleatorio con probabilidad `PM = 1/L`.
+# * Elitismo: el mejor individuo de la generación anterior sobrevive siempre (para no perder la mejor solución por azar).
 
 # In[2]:
 
 
 # ============================================================
-# ACTIVIDAD 1 – Definición del problema
+# ACTIVIDAD 1 - Definición del problema
 # ============================================================
 TARGET = "Los algoritmos genéticos sirven para optimizar"
 
@@ -83,10 +83,10 @@ def decodificar(individuo):
     return "".join(ALFABETO[i] for i in individuo)
 
 print("Longitud del TARGET:", L, "| tamaño del alfabeto:", len(ALFABETO))
-print("Espacio de búsqueda:", f"{len(ALFABETO)}^{L} ≈ {len(ALFABETO)**L:.2e} cadenas posibles")
+print("Espacio de búsqueda:", f"{len(ALFABETO)}^{L} = {len(ALFABETO)**L:.2e} cadenas posibles (aprox.)")
 
 
-# ### Etapa 1 – Población inicial
+# ### Etapa 1 - Población inicial
 # Se generan `ps` cadenas al azar: cada gen es un entero uniforme entre 0 y `len(ALFABETO)-1`.
 
 # In[3]:
@@ -102,7 +102,7 @@ for ind in ejemplo:
     print(repr(decodificar(ind)))
 
 
-# ### Etapa 2 – Función de aptitud
+# ### Etapa 2 - Función de aptitud
 # `aptitud = número de caracteres correctos en su posición`. Es una medida de "distancia de Hamming invertida": vale 46 sólo cuando la cadena es exactamente el TARGET.
 
 # In[4]:
@@ -115,7 +115,7 @@ def aptitud_str(poblacion):
 print("Aptitud del ejemplo:", aptitud_str(ejemplo))
 
 
-# ### Etapa 3 – Selección por torneo
+# ### Etapa 3 - Selección por torneo
 # Para formar cada padre se eligen `k` individuos al azar (con reposición) y se queda el de **mayor aptitud**. Se generan tantos padres como individuos tiene la población.
 
 # In[5]:
@@ -132,7 +132,7 @@ def seleccion_torneo(poblacion, aptitud, rng, k=3, n_padres=None):
     return poblacion[ganadores]
 
 
-# ### Etapa 4 – Cruzamiento de un punto
+# ### Etapa 4 - Cruzamiento de un punto
 # Los padres se agrupan de a pares `(p1, p2)`. Para cada par se sortea un punto de cruce `c` en `1..L-1`; el hijo 1 recibe `p1[:c] + p2[c:]` y el hijo 2 recibe `p2[:c] + p1[c:]`. Con probabilidad `1 - pc` el par no se cruza y los hijos son copias de los padres.
 
 # In[6]:
@@ -155,15 +155,14 @@ def cruce_un_punto(padres, rng, pc=0.9):
     hijos[0::2], hijos[1::2] = h1, h2
     return hijos[:n]
 
-# Demostración con dos padres
-demo_rng = np.random.default_rng(1)
+# Demostración con dos padres y punto de cruce fijo en 4 (misma regla que aplica la función)
 pa = np.array([[ALFABETO.index(c) for c in "AAAAAAAAAA"], [ALFABETO.index(c) for c in "bbbbbbbbbb"]])
 hijos_demo = np.where(np.arange(10) < 4, pa[0], pa[1]), np.where(np.arange(10) < 4, pa[1], pa[0])
 print("Padres :", decodificar(pa[0]), decodificar(pa[1]))
 print("Hijos (punto de cruce = 4):", decodificar(hijos_demo[0]), decodificar(hijos_demo[1]))
 
 
-# ### Etapa 5 – Mutación
+# ### Etapa 5 - Mutación
 # Cada gen de cada hijo muta (se reemplaza por un carácter aleatorio del alfabeto) con probabilidad `pm`. Con `pm = 1/L` muta, en promedio, **un carácter por individuo**, lo que mantiene diversidad sin destruir las soluciones buenas.
 
 # In[7]:
@@ -177,7 +176,7 @@ def mutacion_str(hijos, rng, pm):
 
 
 # ### Ciclo completo del AG para la cadena
-# Se repite **selección → cruce → mutación → reemplazo (con elitismo)** hasta que algún individuo alcanza aptitud `L` (encontró el TARGET) o se agota el máximo de generaciones.
+# Se repite selección, cruce, mutación y reemplazo (con elitismo) hasta que algún individuo alcanza aptitud `L` (encontró el TARGET) o se agota el máximo de generaciones.
 
 # In[8]:
 
@@ -225,7 +224,7 @@ print("\nResultado:", res["mejor"], "| generaciones:", res["generaciones"], "| e
 # 
 # **Criterio de "mejor ajuste"** (elegido automáticamente por el programa):
 # 1. Debe **encontrar el TARGET** en todas las repeticiones (dentro de `max_gen`).
-# 2. Entre los que lo encuentran, gana el que necesita **menos evaluaciones de la función de aptitud** (`PS × generaciones`), que es el costo computacional real del AG. Como desempate se usa el tiempo de ejecución.
+# 2. Entre los que lo encuentran, gana el que necesita **menos evaluaciones de la función de aptitud** (`PS * generaciones`), que es el costo computacional real del AG. Como desempate se usa el tiempo de ejecución.
 # 
 # Una población grande converge en menos generaciones pero cada generación cuesta más; una población chica es barata por generación pero necesita muchas más (y puede estancarse). El AG busca el punto de equilibrio.
 
@@ -277,7 +276,7 @@ for i, ps in enumerate(PS):
     ax[0].plot(h, label=f"PS={ps} (i={i})")
     ax[1].plot(np.arange(len(h)) * ps, h, label=f"PS={ps} (i={i})")
 ax[0].set(xlabel="generación", ylabel="mejor aptitud", title="Convergencia por generación")
-ax[1].set(xlabel="evaluaciones de aptitud (PS × gen)", ylabel="mejor aptitud",
+ax[1].set(xlabel="evaluaciones de aptitud (PS x gen)", ylabel="mejor aptitud",
           title="Convergencia por costo computacional", xlim=(0, 60000))
 ax[0].legend(fontsize=8); ax[1].legend(fontsize=8)
 plt.tight_layout(); plt.show()
@@ -285,30 +284,30 @@ plt.tight_layout(); plt.show()
 
 # **Conclusión Actividad 1.** Todos los tamaños de la lista encuentran la cadena, pero el costo es muy distinto:
 # 
-# * Las poblaciones **grandes (500 y 1000)** convergen en muy pocas generaciones, pero cada generación es cara: terminan haciendo **2 a 3 veces más evaluaciones** de aptitud que las chicas. Para este problema (fitness barato, 46 genes, alfabeto de 83 símbolos) esa diversidad extra no se aprovecha.
-# * Las poblaciones **chicas (50 y 100)** necesitan cientos de generaciones, pero el total de evaluaciones es el menor. El costo es una **mayor variabilidad** entre corridas (ver la columna `gen_desvio`: las dos entradas de PS=50 de la lista dan promedios distintos), porque con pocos individuos el avance depende más de la suerte de la mutación.
-# * El programa elige automáticamente el elemento de `PS` con menos evaluaciones promedio (impreso en la celda anterior). Con estas semillas el mejor ajuste está en el rango **50–100 individuos**; si el criterio fuera "menos generaciones" o "menor tiempo de reloj" ganarían las poblaciones grandes, por eso es importante definir el criterio antes de comparar.
+# * Las poblaciones grandes (500 y 1000) convergen en pocas generaciones, pero cada generación es cara: terminan haciendo entre 1.8 y 2.5 veces más evaluaciones de aptitud que la mejor. Para este problema (fitness barato, 46 genes, alfabeto de 83 símbolos) esa diversidad extra no se aprovecha.
+# * Las poblaciones chicas (50 y 100) necesitan cientos de generaciones, pero el total de evaluaciones es el menor. La contra es una mayor variabilidad entre corridas (ver la columna `gen_desvio`; además las dos entradas de PS=50 de la lista dan promedios distintos), porque con pocos individuos el avance depende más de la suerte de la mutación.
+# * El programa elige automáticamente el elemento de `PS` con menos evaluaciones promedio: PS = 50 (i = 2), prácticamente empatado con PS = 100. Si el criterio fuera "menos generaciones" ganaría PS = 1000, por eso es importante definir el criterio antes de comparar.
 
 # ---
-# # ACTIVIDAD 2 – Optimizar funciones en el espacio
+# # ACTIVIDAD 2 - Optimizar funciones en el espacio
 # 
-# ## 2.a – Mínimo de $f(x,y)=(x-1)^2+(x-y)^4$ con selección por **rueda de ruleta**
+# ## 2.a - Mínimo de $f(x,y)=(x-1)^2+(x-y)^4$ con selección por rueda de ruleta
 # 
 # Esta función es $\ge 0$ y vale 0 sólo en $(1, 1)$, que es su mínimo global. Siguiendo el ejemplo de la diapositiva "Rueda", usamos **codificación binaria**:
 # 
-# * **Individuo:** cadena de `2 × NBITS` bits. Los primeros `NBITS` codifican $x$ y los siguientes $y$.
-# * **Decodificación:** el entero $n$ que representan los bits se mapea linealmente al intervalo $[a,b]$: $x = a + n \cdot \frac{b-a}{2^{NBITS}-1}$.
-# * **Función de aptitud:** la ruleta necesita valores **positivos y a maximizar**, pero queremos **minimizar** $f$. Se usa la transformación
+# * Individuo: cadena de `2 * NBITS` bits. Los primeros `NBITS` codifican $x$ y los siguientes $y$.
+# * Decodificación: el entero $n$ que representan los bits se mapea linealmente al intervalo $[a,b]$: $x = a + n \cdot \frac{b-a}{2^{NBITS}-1}$.
+# * Función de aptitud: la ruleta necesita valores **positivos y a maximizar**, pero queremos **minimizar** $f$. Se usa la transformación
 #   $$\text{aptitud}(x,y) = \frac{1}{1 + f(x,y)} \in (0, 1]$$
 #   que vale 1 exactamente en el mínimo y decrece cuando $f$ crece.
-# * **Selección por ruleta:** a cada individuo se le asigna la probabilidad $P(i) = \dfrac{\text{aptitud}_i}{\sum_j \text{aptitud}_j}$; se sortea $r \in [0,1)$ y se recorre la probabilidad acumulada hasta superarlo (tal como se describe en la nota del TP).
-# * **Cruzamiento:** de un punto sobre la cadena de bits. **Mutación:** inversión de bit (bit‑flip) con probabilidad `pm` por bit.
+# * Selección por ruleta: a cada individuo se le asigna la probabilidad $P(i) = \dfrac{\text{aptitud}_i}{\sum_j \text{aptitud}_j}$; se sortea $r \in [0,1)$ y se recorre la probabilidad acumulada hasta superarlo (tal como se describe en la nota del TP).
+# * Cruzamiento: de un punto sobre la cadena de bits. **Mutación:** inversión de bit (bit-flip) con probabilidad `pm` por bit.
 
 # In[12]:
 
 
 # ============================================================
-# ACTIVIDAD 2.a – Definición del problema
+# ACTIVIDAD 2.a - Definición del problema
 # ============================================================
 def f_a(x, y):
     return (x - 1) ** 2 + (x - y) ** 4
@@ -331,7 +330,7 @@ def bits_a_str(ind):
     return "".join(str(b) for b in ind)
 
 
-# ### Etapa 1 – Población inicial (bits aleatorios)
+# ### Etapa 1 - Población inicial (bits aleatorios)
 
 # In[13]:
 
@@ -341,7 +340,7 @@ def poblacion_inicial_bin(ps, ngenes, rng):
     return rng.integers(0, 2, size=(ps, ngenes))
 
 
-# ### Etapa 2 – Función de aptitud
+# ### Etapa 2 - Función de aptitud
 
 # In[14]:
 
@@ -352,7 +351,7 @@ def aptitud_a(poblacion):
     return 1.0 / (1.0 + f_a(xy[:, 0], xy[:, 1]))
 
 
-# ### Etapa 3 – Selección por rueda de ruleta
+# ### Etapa 3 - Selección por rueda de ruleta
 # Se muestran dos implementaciones equivalentes: una "literal" con el bucle de la nota del TP (para un individuo), y una vectorizada con `np.searchsorted` que se usa en el ciclo principal.
 
 # In[15]:
@@ -393,9 +392,9 @@ print(f"Tirada r = {r_demo} -> se selecciona el individuo {ruleta_un_individuo(t
 tabla
 
 
-# ### Etapa 4 – Cruzamiento de un punto sobre bits
+# ### Etapa 4 - Cruzamiento de un punto sobre bits
 # Se reutiliza `cruce_un_punto` de la Actividad 1 (es independiente del tipo de gen).
-# ### Etapa 5 – Mutación por inversión de bit
+# ### Etapa 5 - Mutación por inversión de bit
 
 # In[16]:
 
@@ -441,27 +440,27 @@ print("Mínimo exacto    : x = 1, y = 1, f = 0")
 
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4.5))
-ax[0].semilogy(hist_a); ax[0].set(xlabel="generación", ylabel="f(mejor) [log]", title="2.a – Convergencia (ruleta)")
+ax[0].semilogy(hist_a); ax[0].set(xlabel="generación", ylabel="f(mejor) [log]", title="2.a - Convergencia (ruleta)")
 
 X, Y = np.meshgrid(np.linspace(-2, 3, 200), np.linspace(-2, 3, 200))
 cs = ax[1].contour(X, Y, np.log10(f_a(X, Y) + 1e-9), levels=20, cmap="viridis")
 xy_f = decodificar_bin(pob_final_a)
 ax[1].scatter(xy_f[:, 0], xy_f[:, 1], s=10, c="red", label="población final")
 ax[1].scatter([1], [1], marker="*", s=200, c="gold", edgecolor="k", label="mínimo (1,1)")
-ax[1].set(xlabel="x", ylabel="y", title="2.a – Población final sobre log10 f(x,y)"); ax[1].legend()
+ax[1].set(xlabel="x", ylabel="y", title="2.a - Población final sobre log10 f(x,y)"); ax[1].legend()
 plt.tight_layout(); plt.show()
 
 
-# ## 2.b – Máximo de $f(x,y)=2+\sqrt{9-x^2-y^2}$ (parte real) con un método **diferente**
+# ## 2.b - Máximo de $f(x,y)=2+\sqrt{9-x^2-y^2}$ (parte real) con un método diferente
 # 
 # La raíz sólo es real dentro del disco $x^2+y^2 \le 9$, por lo que el problema tiene una **restricción**. El máximo es $f(0,0)=5$ (la "cúpula" de la figura del TP).
 # 
 # Cambios respecto del ejercicio anterior (método diferente):
-# * **Codificación real:** cada individuo es un vector $(x, y)$ de números flotantes (no hay que decodificar bits).
-# * **Selección por rango lineal:** los individuos se ordenan por aptitud y la probabilidad de selección depende de la **posición** (rango) y no del valor de la aptitud. Esto evita el problema de la ruleta de que un individuo dominante acapare la población en pocas generaciones.
-# * **Cruzamiento aritmético:** $h_1 = \alpha p_1 + (1-\alpha) p_2$, $h_2 = (1-\alpha) p_1 + \alpha p_2$ con $\alpha \sim U(0,1)$ (los hijos son puntos intermedios entre los padres).
-# * **Mutación gaussiana:** a cada gen se le suma ruido $N(0,\sigma)$ con probabilidad `pm`.
-# * **Restricción mediante penalización:** si $9-x^2-y^2<0$ el individuo es infactible y su aptitud es $2-(x^2+y^2-9)$, siempre menor que la de cualquier factible (que vale al menos 2) y peor cuanto más lejos está del disco. Así la población es "empujada" hacia la región factible.
+# * Codificación real: cada individuo es un vector $(x, y)$ de números flotantes (no hay que decodificar bits).
+# * Selección por rango lineal: los individuos se ordenan por aptitud y la probabilidad de selección depende de la **posición** (rango) y no del valor de la aptitud. Esto evita el problema de la ruleta de que un individuo dominante acapare la población en pocas generaciones.
+# * Cruzamiento aritmético: $h_1 = \alpha p_1 + (1-\alpha) p_2$, $h_2 = (1-\alpha) p_1 + \alpha p_2$ con $\alpha \sim U(0,1)$ (los hijos son puntos intermedios entre los padres).
+# * Mutación gaussiana: a cada gen se le suma ruido $N(0,\sigma)$ con probabilidad `pm`.
+# * Restricción mediante penalización: si $9-x^2-y^2<0$ el individuo es infactible y su aptitud es $2-(x^2+y^2-9)$, siempre menor que la de cualquier factible (que vale al menos 2) y peor cuanto más lejos está del disco. Así la población es "empujada" hacia la región factible.
 # 
 # **Función de aptitud:**
 # $$\text{aptitud}(x,y)=\begin{cases} 2+\sqrt{9-x^2-y^2} & \text{si } 9-x^2-y^2\ge 0 \\ 2-(x^2+y^2-9) & \text{en otro caso (penalización)}\end{cases}$$
@@ -470,26 +469,26 @@ plt.tight_layout(); plt.show()
 
 
 # ============================================================
-# ACTIVIDAD 2.b – Definición del problema
+# ACTIVIDAD 2.b - Definición del problema
 # ============================================================
 DOM_B = (-4.0, 4.0)
 
 def f_b(x, y):
-    """Parte real de 2 + sqrt(9 - x² - y²) (NaN fuera del disco)."""
+    """Parte real de 2 + sqrt(9 - x^2 - y^2) (NaN fuera del disco)."""
     return 2 + np.sqrt(9 - x ** 2 - y ** 2)
 
 def aptitud_b(poblacion):
-    """Aptitud con penalización para los puntos fuera del disco x²+y² <= 9."""
+    """Aptitud con penalización para los puntos fuera del disco x^2 + y^2 <= 9."""
     x, y = poblacion[:, 0], poblacion[:, 1]
     radicando = 9 - x ** 2 - y ** 2
     factible = radicando >= 0
     apt = np.empty(len(poblacion))
     apt[factible] = 2 + np.sqrt(radicando[factible])      # valor real de f
-    apt[~factible] = 2 - (-radicando[~factible])          # 2 - distancia al disco (< 2)
+    apt[~factible] = 2 - (-radicando[~factible])          # 2 - exceso fuera del disco (< 2)
     return apt
 
 
-# ### Etapa 1 – Población inicial real
+# ### Etapa 1 - Población inicial real
 
 # In[20]:
 
@@ -500,7 +499,7 @@ def poblacion_inicial_real(ps, n_var, dominio, rng):
     return rng.uniform(lo, hi, size=(ps, n_var))
 
 
-# ### Etapa 3 – Selección por rango lineal
+# ### Etapa 3 - Selección por rango lineal
 # Se ordena la población de peor a mejor; el individuo en la posición $i$ (0 = peor) recibe probabilidad $P_i = \dfrac{2 - s}{N} + \dfrac{2 i (s - 1)}{N (N - 1)}$ con presión selectiva $s \in [1, 2]$ (con $s=2$ el mejor tiene el doble de probabilidad que la media y el peor, probabilidad 0). Luego se sortea con esas probabilidades (ruleta sobre los rangos).
 
 # In[21]:
@@ -517,7 +516,7 @@ def seleccion_rango(poblacion, aptitud, rng, s=1.8, n_padres=None):
     return poblacion[idx]
 
 
-# ### Etapa 4 – Cruzamiento aritmético  ·  Etapa 5 – Mutación gaussiana
+# ### Etapas 4 y 5: cruzamiento aritmético y mutación gaussiana
 
 # In[22]:
 
@@ -552,7 +551,7 @@ def mutacion_gaussiana(hijos, rng, pm, sigma, dominio=None):
 
 def ag_maximo_rango(ps=80, n_gen=150, pc=0.9, pm=0.2, sigma=0.3, s=1.8, rng=None):
     rng = np.random.default_rng(SEMILLA) if rng is None else rng
-    pob = poblacion_inicial_real(ps, 2, DOM_B, rng)     # 1. Población inicial en [-4,4]²
+    pob = poblacion_inicial_real(ps, 2, DOM_B, rng)     # 1. Población inicial en [-4,4] x [-4,4]
     apt = aptitud_b(pob)                                # 2. Aptitud (con penalización)
     hist = []
     for gen in range(n_gen):
@@ -576,32 +575,32 @@ print("Individuos factibles en la población final:", int(((pob_final_b ** 2).su
 
 
 fig, ax = plt.subplots(1, 2, figsize=(13, 4.5))
-ax[0].plot(hist_b); ax[0].set(xlabel="generación", ylabel="mejor aptitud", title="2.b – Convergencia (rango)")
+ax[0].plot(hist_b); ax[0].set(xlabel="generación", ylabel="mejor aptitud", title="2.b - Convergencia (rango)")
 X, Y = np.meshgrid(np.linspace(-4, 4, 300), np.linspace(-4, 4, 300))
 Z = np.where(X**2 + Y**2 <= 9, 2 + np.sqrt(np.clip(9 - X**2 - Y**2, 0, None)), 2)
 ax[1].contourf(X, Y, Z, levels=20, cmap="YlOrRd")
 ax[1].add_patch(plt.Circle((0, 0), 3, fill=False, ls="--", color="k"))
 ax[1].scatter(pob_final_b[:, 0], pob_final_b[:, 1], s=10, c="blue", label="población final")
 ax[1].scatter([0], [0], marker="*", s=200, c="gold", edgecolor="k", label="máximo (0,0)")
-ax[1].set(xlabel="x", ylabel="y", title="2.b – Región factible (disco) y población final", aspect="equal"); ax[1].legend(loc="lower left")
+ax[1].set(xlabel="x", ylabel="y", title="2.b - Región factible (disco) y población final", aspect="equal"); ax[1].legend(loc="lower left")
 plt.tight_layout(); plt.show()
 
 
-# ## 2.c – Máximo de $f(x,y,z)=z-x^2-15y^2$ con $-2<x,y,z<11$
+# ## 2.c - Máximo de $f(x,y,z)=z-x^2-15y^2$ con $-2<x,y,z<11$
 # 
 # Analíticamente: $-x^2$ y $-15y^2$ se maximizan en $x=y=0$ y $z$ debe ser lo más grande posible, por lo que el máximo está en el borde $z \to 11$, con $f \to 11$ (la desigualdad es estricta, así que el óptimo se aproxima desde adentro).
 # 
 # **Modelado:**
-# * **Individuo:** vector real $(x, y, z)$.
-# * **Función de aptitud:** la propia $f(x,y,z)$ (se maximiza directamente; el torneo no necesita valores positivos).
-# * **Restricción de caja:** la población inicial se genera dentro del dominio y, tras cada mutación, los genes se recortan a $(-2+\varepsilon,\, 11-\varepsilon)$ para respetar la desigualdad estricta.
-# * **Selección por torneo** (k = 3) + elitismo; **cruzamiento aritmético**; **mutación gaussiana** con $\sigma$ que decrece con las generaciones (al principio explora, al final afina).
+# * Individuo: vector real $(x, y, z)$.
+# * Función de aptitud: la propia $f(x,y,z)$ (se maximiza directamente; el torneo no necesita valores positivos).
+# * Restricción de caja: la población inicial se genera dentro del dominio y, tras cada mutación, los genes se recortan a $(-2+\varepsilon,\, 11-\varepsilon)$ para respetar la desigualdad estricta.
+# * Selección por torneo (k = 3) + elitismo; **cruzamiento aritmético**; **mutación gaussiana** con $\sigma$ que decrece con las generaciones (al principio explora, al final afina).
 
 # In[25]:
 
 
 # ============================================================
-# ACTIVIDAD 2.c – Definición del problema
+# ACTIVIDAD 2.c - Definición del problema
 # ============================================================
 EPS = 1e-9
 DOM_C = (-2.0 + EPS, 11.0 - EPS)     # intervalo abierto (-2, 11) aproximado
@@ -615,7 +614,7 @@ def aptitud_c(poblacion):
 
 def ag_maximo_3d(ps=100, n_gen=200, pc=0.9, pm=0.3, sigma0=1.0, k=3, rng=None):
     rng = np.random.default_rng(SEMILLA) if rng is None else rng
-    pob = poblacion_inicial_real(ps, 3, DOM_C, rng)      # 1. Población inicial en (-2, 11)³
+    pob = poblacion_inicial_real(ps, 3, DOM_C, rng)      # 1. Población inicial en (-2, 11) para x, y, z
     apt = aptitud_c(pob)                                 # 2. Aptitud
     hist = []
     for gen in range(n_gen):
@@ -635,34 +634,34 @@ print(f"Máximo aproximado: x = {mejor_c[0]:.5f}, y = {mejor_c[1]:.5f}, z = {mej
 print("Máximo teórico   : x = 0, y = 0, z -> 11, f -> 11")
 
 plt.plot(hist_c); plt.axhline(11, ls="--", c="gray", label="cota teórica f = 11")
-plt.xlabel("generación"); plt.ylabel("mejor aptitud"); plt.title("2.c – Convergencia (torneo)"); plt.legend(); plt.show()
+plt.xlabel("generación"); plt.ylabel("mejor aptitud"); plt.title("2.c - Convergencia (torneo)"); plt.legend(); plt.show()
 
 
 # ---
-# # ACTIVIDAD 3 – Selección de variables con AG (dataset *Wine*)
+# # ACTIVIDAD 3 - Selección de variables con AG (dataset *Wine*)
 # 
-# El artículo de **Zachary Warnes** ("*Feature Selection with Genetic Algorithms*", Towards Data Science, 2021) plantea la selección de variables como un problema de búsqueda: cada individuo es una **máscara binaria** que indica qué columnas del dataset se usan, y la aptitud es el **desempeño de un clasificador** entrenado sólo con esas columnas (enfoque *wrapper*). En el artículo se usa el paquete `sklearn-genetic` (`GeneticSelectionCV`) con regresión logística, selección por torneo, cruce uniforme, mutación por inversión de bits y `max_features`; acá se programan esas mismas etapas a mano para poder identificarlas.
+# El artículo de **Zachary Warnes** ("*Feature Selection with Genetic Algorithms*", Towards Data Science, 2021) plantea la selección de variables como un problema de búsqueda: cada individuo es una **máscara binaria** que indica qué columnas del dataset se usan, y la aptitud es el **desempeño de un clasificador** entrenado sólo con esas columnas (enfoque *wrapper*). En el artículo se usa el paquete `sklearn-genetic` (`GeneticSelectionCV`) sobre el dataset de cáncer de mama, probando varios clasificadores y comparando el subconjunto del AG contra usar todas las variables y contra las 5 mejores según chi2. El AG de esa librería usa selección por torneo, cruce, mutación por inversión de bits y un límite de variables (`max_features`). Acá se programan esas mismas etapas a mano, sobre Wine y con regresión logística, para poder identificarlas.
 # 
 # **Dataset Wine** (`sklearn.datasets.load_wine`): 178 vinos, **13 variables químicas** y 3 clases (cultivares). Hay $2^{13}-1 = 8191$ subconjuntos posibles de variables.
 # 
 # ### Modelado
-# * **Individuo:** vector de 13 bits; el bit $j = 1$ significa "usar la variable $j$".
-# * **Función de aptitud:** *accuracy* promedio de **validación cruzada estratificada (5 folds)** de una regresión logística (con estandarización) entrenada sobre las variables seleccionadas, calculada sobre el conjunto de *entrenamiento*. Se resta una pequeña penalización `LAMBDA × n_variables` para preferir, a igual accuracy, los subconjuntos más chicos (modelos más simples, como pide la consigna). Un individuo sin variables tiene aptitud 0.
+# * Individuo: vector de 13 bits; el bit $j = 1$ significa "usar la variable $j$".
+# * Función de aptitud: *accuracy* promedio de **validación cruzada estratificada (5 folds)** de una regresión logística (con estandarización) entrenada sobre las variables seleccionadas, calculada sobre el conjunto de *entrenamiento*. Se resta una pequeña penalización `LAMBDA * n_variables` para preferir, a igual accuracy, los subconjuntos más chicos (modelos más simples, como pide la consigna). Un individuo sin variables tiene aptitud 0.
 # * Como la aptitud es costosa (entrena 5 modelos), se **cachea** por máscara, igual que hace `GeneticSelectionCV` con `caching=True`.
 # 
 # ### Etapas pedidas por la consigna (identificadas en el código)
 # | Etapa | Implementación |
 # |---|---|
-# | **Seleccionar** | `seleccionar()` – torneo de tamaño 3 |
-# | **Cruzar** | `cruzar()` – cruce uniforme (cada bit viene de uno u otro padre con prob. 0.5) |
-# | **Mutar** | `mutar()` – inversión de bit con probabilidad `PM` por gen |
-# | **Reemplazar** | `reemplazar()` – reemplazo generacional con elitismo (los `N_ELITE` mejores padres sobreviven) |
+# | Seleccionar | `seleccionar()` - torneo de tamaño 3 |
+# | Cruzar | `cruzar()` - cruce uniforme (cada bit viene de uno u otro padre con prob. 0.5) |
+# | Mutar | `mutar()` - inversión de bit con probabilidad `PM` por gen |
+# | Reemplazar | `reemplazar()` - reemplazo generacional con elitismo (los `N_ELITE` mejores padres sobreviven) |
 
 # In[26]:
 
 
 # ============================================================
-# ACTIVIDAD 3 – Datos y función de aptitud
+# ACTIVIDAD 3 - Datos y función de aptitud
 # ============================================================
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
@@ -715,7 +714,7 @@ todas = np.ones(N_FEAT, dtype=int)
 print(f"\nAccuracy CV (train) usando las 13 variables: {accuracy_cv(todas):.4f}")
 
 
-# ### Etapa 1 – Población inicial
+# ### Etapa 1 - Población inicial
 # Cada bit se inicializa en 1 con probabilidad 0.5. Si un individuo queda sin variables se le activa una al azar.
 
 # In[27]:
@@ -729,7 +728,7 @@ def poblacion_inicial_fs(ps, rng):
     return pob
 
 
-# ### Etapa **SELECCIONAR** – torneo
+# ### Etapa SELECCIONAR - torneo
 
 # In[28]:
 
@@ -739,7 +738,7 @@ def seleccionar(poblacion, aptitud, rng, k=3):
     return seleccion_torneo(poblacion, aptitud, rng, k=k)
 
 
-# ### Etapa **CRUZAR** – cruce uniforme
+# ### Etapa CRUZAR - cruce uniforme
 # Para cada par de padres y cada bit se sortea de qué padre lo hereda cada hijo (probabilidad 0.5). Es el operador que usa `GeneticSelectionCV` (`crossover_independent_proba`). Se aplica con probabilidad `pc` por par.
 
 # In[29]:
@@ -760,7 +759,7 @@ def cruzar(padres, rng, pc=0.7):
     return hijos[:n]
 
 
-# ### Etapa **MUTAR** – inversión de bit
+# ### Etapa MUTAR - inversión de bit
 
 # In[30]:
 
@@ -775,7 +774,7 @@ def mutar(hijos, rng, pm=0.08):
     return hijos
 
 
-# ### Etapa **REEMPLAZAR** – generacional con elitismo
+# ### Etapa REEMPLAZAR - generacional con elitismo
 # La nueva población son los hijos, pero los `n_elite` mejores individuos de la generación anterior reemplazan a los `n_elite` peores hijos. Así la mejor solución nunca se pierde.
 
 # In[31]:
@@ -818,7 +817,7 @@ print("Mejor subconjunto:", nombres(mejor_demo))
 
 
 # ### Prueba con distintos números de generaciones
-# Se corre el AG con **2, 5, 10, 20 y 40 generaciones**, y para que el resultado no dependa de la suerte de una sola población inicial, cada configuración se repite con **5 semillas distintas** (población de 20 individuos). Para el mejor subconjunto de cada corrida se reporta: cantidad de variables, aptitud, accuracy CV en train y accuracy en el conjunto de **test** (nunca visto por el AG). Se compara contra usar **todas** las variables y contra las **5 mejores por el test chi²** (`SelectKBest`), tal como hace el artículo.
+# Se corre el AG con **2, 5, 10, 20 y 40 generaciones**, y para que el resultado no dependa de la suerte de una sola población inicial, cada configuración se repite con **5 semillas distintas** (población de 20 individuos). Para el mejor subconjunto de cada corrida se reporta: cantidad de variables, aptitud, accuracy CV en train y accuracy en el conjunto de **test** (nunca visto por el AG). Se compara contra usar **todas** las variables y contra las **5 mejores por el test chi2** (`SelectKBest`), tal como hace el artículo.
 
 # In[33]:
 
@@ -867,7 +866,7 @@ mascara_ag = np.isin(NOMBRES, mejor_global.variables.split(", ")).astype(int)
 base = pd.DataFrame([
     {"método": "Todas las variables", "n_variables": N_FEAT,
      "acc_cv_train": accuracy_cv(todas), "acc_test": accuracy_test(todas), "variables": "todas"},
-    {"método": "Filtro chi² (top-5)", "n_variables": 5,
+    {"método": "Filtro chi2 (top-5)", "n_variables": 5,
      "acc_cv_train": accuracy_cv(mascara_chi2), "acc_test": accuracy_test(mascara_chi2),
      "variables": ", ".join(nombres(mascara_chi2))},
     {"método": f"AG (mejor corrida: {mejor_global.generaciones} gen., semilla {mejor_global.semilla})",
@@ -897,8 +896,8 @@ for s in SEMILLAS:
 for ng in GENERACIONES[:-1]:
     ax.axvline(ng, ls=":", c="gray")
 ax.axhline(APT_MAX, ls="--", c="k", lw=0.8, label="mejor aptitud hallada")
-ax.set(xlabel="generación", ylabel="mejor aptitud (acc CV − λ·n_var)",
-       title="Actividad 3 – Convergencia del AG de selección de variables (PS=20)")
+ax.set(xlabel="generación", ylabel="mejor aptitud (acc CV - LAMBDA * n_var)",
+       title="Actividad 3 - Convergencia del AG de selección de variables (PS=20)")
 ax.legend(fontsize=8); plt.show()
 
 
@@ -912,20 +911,20 @@ frec.plot.barh(figsize=(8, 5)); plt.gca().invert_yaxis()
 plt.xlabel("fracción de corridas en que fue seleccionada"); plt.title("Variables más seleccionadas por el AG"); plt.show()
 
 
-# ### Reporte de resultados – Actividad 3
-# * **Efecto del número de generaciones.** Con 2 generaciones el AG casi no supera a la mejor máscara aleatoria de la población inicial: pocas semillas llegan al óptimo y los subconjuntos son más grandes. A medida que aumentan las generaciones la aptitud promedio sube y la cantidad de variables baja; a partir de **~10–20 generaciones** la mayoría de las semillas alcanza la mejor aptitud hallada y con 40 el resultado ya está en una meseta (ver columna `corridas_optimas` y el gráfico de convergencia). Más generaciones sólo agregan tiempo de cómputo.
-# * **Calidad del subconjunto.** El AG encuentra subconjuntos de **4–6 variables (menos de la mitad de las 13)** con accuracy de validación cruzada en train **mayor** que la de usar todas las variables (≈0.99 vs 0.97) y mayor que la del filtro univariado chi² con 5 variables, porque evalúa las variables **en conjunto** (interacciones) y no de a una.
-# * **Limitación observada (sobreajuste de la selección).** En el conjunto de test, que el AG nunca vio, los subconjuntos más "optimizados" rinden algo **peor** que usar todas las variables (≈0.91–0.96 vs 0.98). El test tiene sólo 54 muestras, así que esa diferencia equivale a 1–4 vinos mal clasificados, pero la tendencia es clara: cuantas más generaciones, mejor la aptitud CV y peor el test. Es el *sesgo de selección* típico de los métodos *wrapper*: al evaluar cientos de máscaras sobre los mismos folds, el AG termina eligiendo la que mejor se ajusta a esas particiones y no necesariamente la que mejor generaliza (lo probamos también con validación cruzada repetida 3×5 y 5×5 y el fenómeno se mantiene). Para una estimación insesgada habría que usar **validación cruzada anidada** (el AG adentro de cada fold externo) o un dataset más grande que Wine; el artículo de Warnes advierte sobre este mismo riesgo.
-# * **Variables recurrentes.** *proline*, *color_intensity*, *alcohol*, *hue*, *flavanoids* y *od280/od315* aparecen en casi todas las corridas: son las que mejor separan los tres cultivares, lo que coincide con lo que se conoce del dataset Wine.
-# * **Beneficios logrados**, como enumera la consigna: modelo más simple e interpretable (4–6 variables en lugar de 13), entrenamiento más rápido y menor dimensionalidad. El beneficio de "reducir overfitting" del modelo final hay que contrastarlo con el riesgo de sobreajuste del propio proceso de selección descripto arriba.
+# ### Reporte de resultados - Actividad 3
+# * Efecto del número de generaciones. Con 2 generaciones ninguna de las 5 semillas llega a la mejor aptitud hallada y los subconjuntos son más grandes (6.4 variables en promedio). A medida que aumentan las generaciones la aptitud promedio sube y la cantidad de variables baja: con 10 generaciones llegan al óptimo 2 de 5 semillas, con 20 llegan 3 y con 40 llegan 4 (ver la columna `corridas_optimas` y el gráfico de convergencia). Entre 20 y 40 generaciones la mejora es chica, así que más generaciones agregan sobre todo tiempo de cómputo.
+# * Calidad del subconjunto. El AG encuentra subconjuntos de 4 a 7 variables (4 o 5 cuando se corre con 10 generaciones o más), con accuracy de validación cruzada en train mayor que la de usar todas las variables (0.992 contra 0.967) y mayor que la del filtro chi2 con 5 variables (0.976), porque evalúa las variables en conjunto y no de a una.
+# * Limitación observada (sobreajuste de la selección). En el conjunto de test, que el AG nunca vio, los subconjuntos elegidos rinden peor que usar todas las variables (entre 0.91 y 0.97 de promedio, contra 0.98). El test tiene sólo 54 muestras, así que la diferencia equivale a entre 1 y 4 vinos mal clasificados, pero la tendencia se ve: con más generaciones sube la aptitud CV y baja el accuracy en test. Esto pasa porque al evaluar cientos de máscaras sobre los mismos folds, el AG termina eligiendo la que mejor se ajusta a esas particiones y no necesariamente la que mejor generaliza (sesgo de selección de los métodos *wrapper*). Para tener una estimación sin ese sesgo habría que usar validación cruzada anidada (el AG adentro de cada fold externo) o un dataset más grande que Wine.
+# * Variables recurrentes. *color_intensity* y *proline* aparecen en las 25 corridas y *flavanoids* en 24. *alcohol*, *ash* y *malic_acid* aparecen en alrededor de la mitad, y el subconjunto que más se repite con 20 y 40 generaciones es *ash, flavanoids, color_intensity, proline*. *hue* y *od280/od315* aparecen sobre todo en las corridas cortas y se van cuando el AG achica el subconjunto.
+# * Beneficios logrados, según lo que enumera la consigna: modelo más simple e interpretable (4 o 5 variables en lugar de 13), entrenamiento más rápido y menor dimensionalidad. El beneficio de "reducir overfitting" del modelo final hay que contrastarlo con el sobreajuste del propio proceso de selección descripto arriba.
 # 
-# Las etapas **Seleccionar / Cruzar / Mutar / Reemplazar** están identificadas en las funciones `seleccionar`, `cruzar`, `mutar` y `reemplazar` del ciclo `ag_seleccion_variables`.
+# Las etapas **Seleccionar / Cruzar / Mutar / Reemplazar** están en las funciones `seleccionar`, `cruzar`, `mutar` y `reemplazar`, que se llaman en ese orden dentro de `ag_seleccion_variables`.
 
 # ---
 # # Conclusiones generales
-# * El mismo esqueleto (**población → aptitud → selección → cruce → mutación → reemplazo**) sirvió para problemas muy distintos: búsqueda combinatoria de texto, optimización continua con y sin restricciones, y selección de variables en aprendizaje automático. Lo que cambia es la **codificación** del individuo y la **función de aptitud**.
-# * **Elección del fitness:** debe ser positiva y creciente para la ruleta (por eso $1/(1+f)$ en 2.a), puede incluir **penalizaciones** para manejar restricciones (2.b) o términos de regularización para preferir soluciones simples (Actividad 3).
-# * **Métodos de selección:** la ruleta es sencilla pero sensible a la escala y a individuos dominantes; el rango y el torneo son más robustos y permiten controlar la presión selectiva.
-# * **Tamaño de población:** no "más grande es mejor": el programa de la Actividad 1 mostró que hay un tamaño intermedio que minimiza el costo total de evaluaciones.
-# * **Elitismo** fue clave en todos los casos para que la mejor solución no se pierda por el azar del cruce y la mutación.
-# * **Optimizar no es lo mismo que generalizar:** en la Actividad 3 el AG maximizó muy bien su función de aptitud, pero esa aptitud (accuracy CV sobre train) es sólo una estimación; cuando el AG la "exprime" demasiado, la mejora deja de trasladarse a datos nuevos. El diseño de la función de aptitud y de la evaluación es tan importante como el algoritmo.
+# * El mismo esqueleto (población, aptitud, selección, cruce, mutación y reemplazo) sirvió para problemas muy distintos: búsqueda combinatoria de texto, optimización continua con y sin restricciones, y selección de variables en aprendizaje automático. Lo que cambia es la **codificación** del individuo y la **función de aptitud**.
+# * Elección del fitness: debe ser positiva y creciente para la ruleta (por eso $1/(1+f)$ en 2.a), puede incluir **penalizaciones** para manejar restricciones (2.b) o términos de regularización para preferir soluciones simples (Actividad 3).
+# * Métodos de selección: la ruleta es sencilla pero sensible a la escala y a individuos dominantes; el rango y el torneo son más robustos y permiten controlar la presión selectiva.
+# * Tamaño de población: no "más grande es mejor": el programa de la Actividad 1 mostró que hay un tamaño intermedio que minimiza el costo total de evaluaciones.
+# * Elitismo fue clave en todos los casos para que la mejor solución no se pierda por el azar del cruce y la mutación.
+# * Optimizar no es lo mismo que generalizar: en la Actividad 3 el AG maximizó muy bien su función de aptitud, pero esa aptitud (accuracy CV sobre train) es sólo una estimación; cuando el AG la "exprime" demasiado, la mejora deja de trasladarse a datos nuevos. El diseño de la función de aptitud y de la evaluación es tan importante como el algoritmo.
