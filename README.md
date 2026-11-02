@@ -17,6 +17,11 @@ por etapa según el *proceso usual AG*: población → aptitud → selección �
 | 2.c | Máximo de `f(x,y,z) = z - x² - 15y²` con `-2 < x,y,z < 11` | Real | Torneo + elitismo |
 | 3 | Selección de variables en el dataset *Wine* (etapas Seleccionar / Cruzar / Mutar / Reemplazar) | Binaria | Torneo |
 
+## Archivos
+
+- `TP_AG_Hernandez_Ramirez.ipynb` — **el entregable**: notebook con código Python, explicaciones, salidas y gráficos.
+- `TP_AG_Hernandez_Ramirez.py` — el mismo código Python exportado como script plano (sin las explicaciones ni los gráficos embebidos), por si se quiere leer o correr fuera de Jupyter.
+
 ## Ejecución
 
 ```bash
